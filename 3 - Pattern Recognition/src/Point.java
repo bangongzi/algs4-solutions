@@ -8,6 +8,7 @@
  *  An immutable data type for points in the plane.
  *  For use on Coursera, Algorithms Part I programming assignment.
  *
+ *With reader's comments
  *****************************************************************************
  */
 import java.util.Comparator;
@@ -36,7 +37,7 @@ public class Point implements Comparable<Point> {
      */
     public void draw() {
         /* DO NOT MODIFY */
-        StdDraw.point(x, y);
+        StdDraw.point(x, y); // draw the point in some figure, I guess
 //        StdDraw.filledCircle(x, y, 150);
     }
 
@@ -65,17 +66,17 @@ public class Point implements Comparable<Point> {
     public double slopeTo(Point that) {
         if (that.x == this.x && that.y == this.y) {
             return Double.NEGATIVE_INFINITY;
-        }
-
+        } //Meet the same point
+        
         if (that.y == this.y) {
             return 0;
-        }
+        } // horizontal
 
         if (that.x == this.x) {
             return Double.POSITIVE_INFINITY;
-        }
+        } // vertical
 
-        return (double) (that.y - this.y) / (double) (that.x - this.x);
+        return (double) (that.y - this.y) / (double) (that.x - this.x); // normal situation
     }
 
     /**
@@ -99,7 +100,7 @@ public class Point implements Comparable<Point> {
             return -1;
         }
 
-        return 1;
+        return 1; // Brilliant, the last situation do not need a judge sentence
     }
 
     /**
@@ -113,7 +114,7 @@ public class Point implements Comparable<Point> {
         return new Comparator<Point>() {
             @Override
             public int compare(Point o1, Point o2) {
-                double s1 = o1.slopeTo(dis);
+                double s1 = o1.slopeTo(dis); // o1.slopeTo(dis) = dis.slopeTo(o1)
                 double s2 = o2.slopeTo(dis);
 
                 if (Objects.equals(s1, s2)
