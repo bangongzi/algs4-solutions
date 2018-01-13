@@ -27,22 +27,24 @@ public class BruteCollinearPoints {
             }
         }
         
-        Point[] pointsCopy = points.clone();
+        Point[] pointsCopy = points.clone(); // another points array
 
         ArrayList<LineSegment> segs = new ArrayList<>();
         Quick.sort(pointsCopy);
 
         // all points must be unique:
-        for (int i = 0; i < pointsCopy.length - 1; i++) {
+        for (int i = 0; i < pointsCopy.length - 1; i++) { // (n-1)*n compares
             if (pointsCopy[i].compareTo(pointsCopy[i + 1]) == 0) {
                 throw new java.lang.IllegalArgumentException();
             }
         }
 
+        // compare the slope, choose the segment
         for (int i = 0; i < pointsCopy.length; i++) {
             for (int j = 1; j < pointsCopy.length; j++) {
                 for (int k = 2; k < pointsCopy.length; k++) {
                     for (int l = 3; l < pointsCopy.length; l++) {
+                        // with a mess choose, we get p1, p2, p3 and p4
                         if (i < j && j < k && k < l) {
                             Point p1 = pointsCopy[i];
                             Point p2 = pointsCopy[j];
@@ -52,7 +54,8 @@ public class BruteCollinearPoints {
                             double s1 = p1.slopeTo(p2);
                             if (p1.slopeTo(p3) == s1
                                     && p1.slopeTo(p4) == s1) {
-                                segs.add(new LineSegment(p1, p4));
+                                segs.add(new LineSegment(p1, p4)); // if the three slopes are the same, add new LineSegment
+                                                                   // note that two points specify one segment
                             }
                         }
                     }
@@ -60,7 +63,7 @@ public class BruteCollinearPoints {
             }
         }
 
-        segmentsArr = segs.toArray(new LineSegment[segs.size()]);
+        segmentsArr = segs.toArray(new LineSegment[segs.size()]); // segmentsArr for number of segments
     }
 
     public int numberOfSegments() // the number of line segments
@@ -70,7 +73,7 @@ public class BruteCollinearPoints {
 
     public LineSegment[] segments() // the line segments
     {
-        return segmentsArr.clone();
+        return segmentsArr.clone(); // all the segments
     }
 
     public static void main(String[] args) {
