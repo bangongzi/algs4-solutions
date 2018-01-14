@@ -5,7 +5,6 @@ import edu.princeton.cs.algs4.Quick;
 import edu.princeton.cs.algs4.StdOut;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Objects;
 
 /*
  * To change this license header, choose License Headers in Project Properties.
@@ -35,7 +34,7 @@ public class FastCollinearPoints {
         Point[] pointsCopy = points.clone();
 
         ArrayList<LineSegment> segs = new ArrayList<>();
-        Quick.sort(pointsCopy);
+        Quick.sort(pointsCopy); // by the compareTo() function, I guess
 
         // all points must be unique:
         for (int i = 0; i < pointsCopy.length - 1; i++) {
@@ -47,7 +46,7 @@ public class FastCollinearPoints {
         // forbids use of hashcode()
         HashMap<Point, ArrayList<Double>> pointToSlopes = new HashMap<>();
 
-        for (int i = 0; i < pointsCopy.length - 1; i++) {
+        for (int i = 0; i < pointsCopy.length - 1; i++) { // 'i' is the pointer of origin point
             Point origin = pointsCopy[i];
             ArrayList<Point> pts = new ArrayList<>();
 
@@ -58,16 +57,17 @@ public class FastCollinearPoints {
             Point[] ptsArr = pts.toArray(new Point[pts.size()]);
             MergeX.sort(ptsArr, origin.slopeOrder());
 
-            // print all slopes
+            /*// print all slopes
             for (int j = 0; j < ptsArr.length; j++) {
                 Double s1 = origin.slopeTo(ptsArr[j]);
                 StdOut.println(s1);
-            } StdOut.println("===");
+            } StdOut.println("==="); */
 
+            // find all the required segments with the base of the origin
             int j = 0;
-            while (j < ptsArr.length - 2) {
+            while (j < ptsArr.length - 2) { // 'j' is the local finder
                 double s1 = origin.slopeTo(ptsArr[j]);
-                int k = j + 1;
+                int k = j + 1; // k is the helper of 'j'
                 int counter = 1;
                 while (origin.slopeTo(ptsArr[k]) == s1) {
                     counter++;
@@ -78,7 +78,16 @@ public class FastCollinearPoints {
                 } // find the adjacent points that have equal slopes
 
                 if (counter >= 3) {
-                    segs.add(new LineSegment(origin, ptsArr[k-1]));
+                    boolean exHas = false;
+                    for(int ex = 0; ex < i; ex++) {
+                        if(s1 == pointsCopy[ex].slopeTo(pointsCopy[i])) {
+                            exHas = true;
+                            break;
+                        }
+                    }
+                    if(!exHas) {
+                        segs.add(new LineSegment(origin, ptsArr[k-1]));
+                    }
                 } // if counter >= 3, we have a required line segment
                 j = k; // continue to find next adjacent couples
             }
