@@ -53,59 +53,36 @@ public class FastCollinearPoints {
 
             for (int j = i + 1; j < pointsCopy.length; j++) {
                 pts.add(pointsCopy[j]);
-            }
+            } //copy everything except for the origin
 
             Point[] ptsArr = pts.toArray(new Point[pts.size()]);
             MergeX.sort(ptsArr, origin.slopeOrder());
 
-            /* print all slopes
+            // print all slopes
             for (int j = 0; j < ptsArr.length; j++) {
-                Double s1 = origin.slopeTo(ptsArr[j]);               
+                Double s1 = origin.slopeTo(ptsArr[j]);
                 StdOut.println(s1);
             } StdOut.println("===");
-             */
-            for (int j = 0; j < ptsArr.length - 1; j++) {
+
+            int j = 0;
+            while (j < ptsArr.length - 2) {
                 double s1 = origin.slopeTo(ptsArr[j]);
-                Point endPoint = null;
+                int k = j + 1;
                 int counter = 1;
-
-                for (int k = j + 1; k < ptsArr.length; k++) {
-                    double s2 = origin.slopeTo(ptsArr[k]);
-
-                    if (Objects.equals(s1, s2)
-                            || Math.abs(s1 - s2) < 0.000001) {
-                        counter++;
-                        if (counter >= 3) {
-                            endPoint = ptsArr[k];
-                            j = k;
-                        }
-                    } else {
+                while (origin.slopeTo(ptsArr[k]) == s1) {
+                    counter++;
+                    k++;
+                    if ( k >= ptsArr.length) {
                         break;
-                    }
-                }
+                    } // make sure k won't go beyond the length of the array
+                } // find the adjacent points that have equal slopes
 
-                if (endPoint != null) {
-
-                    /* Can't be used since grader forbids use of hashcode()
-                    // ensure that you only have the maximal line
-                    if (pointToSlopes.containsKey(endPoint)) {
-                        ArrayList<Double> slopes = pointToSlopes.get(endPoint);
-                        if (slopes.contains(s1)) {
-                            continue;
-                        } else {
-                            slopes.add(s1);
-                        }
-                    } else {
-                        pointToSlopes.put(endPoint, new ArrayList<>());
-                        pointToSlopes.get(endPoint).add(s1);
-                    }
-                     */
-                    
-                    segs.add(new LineSegment(origin, endPoint));
-                }
+                if (counter >= 3) {
+                    segs.add(new LineSegment(origin, ptsArr[k-1]));
+                } // if counter >= 3, we have a required line segment
+                j = k; // continue to find next adjacent couples
             }
         }
-
         segmentsArr = segs.toArray(new LineSegment[segs.size()]);
     }
 
